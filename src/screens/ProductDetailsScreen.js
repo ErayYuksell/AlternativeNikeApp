@@ -10,14 +10,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Dimensions } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { cartSlice } from "../store/cartSlice";
 
-import products from "../data/products";
-import { useSelector } from "react-redux";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = (Dimensions.get("window").height = "93%");
-export default ProductDetailsScreen = () => {
-  const product = useSelector((state) => state.products.selectedProduct); //*
 
+export default ProductDetailsScreen = ({ navigation }) => {
+  const product = useSelector((state) => state.products.selectedProduct); //*
+  const dispatch = useDispatch();
+
+  const addToCard = () => {
+    dispatch(cartSlice.actions.addCartItem({ product: product }));
+    // navigation.navigate("Shop");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView automaticallyAdjustsScrollIndicatorInsets={true}>
@@ -34,7 +40,7 @@ export default ProductDetailsScreen = () => {
         <Text style={styles.price}>${product.price}</Text>
         <Text style={styles.description}>{product.description}</Text>
       </ScrollView>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={addToCard}>
         <Text style={styles.buttonText}>Add to Card</Text>
       </TouchableOpacity>
     </SafeAreaView>
