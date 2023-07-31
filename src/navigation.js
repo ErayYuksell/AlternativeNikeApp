@@ -16,7 +16,7 @@ const App = () => {
   const numberOfItems = useSelector(selectNumberOfSelect);
 
   return (
-    <NavigationContainer>
+
       <Stack.Navigator
         screenOptions={{ contentStyle: { backgroundColor: "white" } }}
       >
@@ -44,7 +44,7 @@ const App = () => {
         />
         <Stack.Screen name="Cart" component={ShoppingScreen} />
       </Stack.Navigator>
-    </NavigationContainer>
+
   );
 };
 

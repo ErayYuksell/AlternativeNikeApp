@@ -1,9 +1,18 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Animated,
+  Pressable,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { cartSlice } from "../store/cartSlice";
 const CartListItem = ({ cartItem }) => {
   const dispatch = useDispatch();
+  const buttonScale = useRef(new Animated.Value(1)).current;
 
   const increaseQuantity = () => {
     dispatch(
@@ -22,29 +31,48 @@ const CartListItem = ({ cartItem }) => {
       })
     );
   };
-
+  const onPressIn = () => {
+    Animated.spring(buttonScale, {
+      toValue: 1.3,
+      useNativeDriver: true,
+    }).start();
+  };
+  const onPressOut = () => {
+    Animated.spring(buttonScale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
   return (
     <View style={styles.container}>
       <Image source={{ uri: cartItem.product.image }} style={styles.image} />
 
       <View style={styles.contentContainer}>
         <Text style={styles.name}>{cartItem.product.name}</Text>
-        <Text style={styles.size}>Size {cartItem.size}</Text>
+        <Text style={styles.size}>Size:{cartItem.size}</Text>
 
         <View style={styles.footer}>
-          <Feather
+          <Pressable
             onPress={decreaseQuantity}
-            name="minus-circle"
-            size={24}
-            color="gray"
-          />
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+          >
+            <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+              <Feather name="minus-circle" size={24} color="gray" />
+            </Animated.View>
+          </Pressable>
+
           <Text style={styles.quantity}>{cartItem.quantity}</Text>
-          <Feather
+          <Pressable
             onPress={increaseQuantity}
-            name="plus-circle"
-            size={24}
-            color="gray"
-          />
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+          >
+            <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+              <Feather name="plus-circle" size={24} color="gray" />
+            </Animated.View>
+          </Pressable>
+
           <Text style={styles.itemTotal}>
             $ {cartItem.product.price * cartItem.quantity}
           </Text>
